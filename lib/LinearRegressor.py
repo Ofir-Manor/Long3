@@ -1,7 +1,7 @@
 from sklearn.base import BaseEstimator, RegressorMixin
 import numpy as np
 
-    class LinearRegressor(BaseEstimator, RegressorMixin):
+class LinearRegressor(BaseEstimator, RegressorMixin):
     """
     Custom linear regression model
     """
@@ -41,7 +41,8 @@ import numpy as np
         """
 
         # TODO: complete the loss calculation
-        loss = None
+        loss_vector = (X.dot(w) + b - y)
+        loss = (1/y.shape[0]) * np.sum(np.square(loss_vector))
 
         return loss
 
@@ -57,8 +58,9 @@ import numpy as np
         :return: a tuple with (the gradient of the weights, the gradient of the bias)
         """
         # TODO: calculate the analytical gradient w.r.t w and b
-        g_w = None
-        g_b = 0.0
+        gradient_vector = X.dot(w) + b - y
+        g_w = (2/y.shape[0]) * X.T.dot(gradient_vector)
+        g_b = (2/y.shape[0]) * np.sum(gradient_vector)
 
         return g_w, g_b
 
@@ -93,12 +95,12 @@ import numpy as np
             batch_y = y[start_idx: end_idx]
 
             # TODO: Compute the gradient for the current *batch*
-            g_w, g_b = None, None
+            g_w, g_b = self.gradient(self.w, self.b, batch_X, batch_y)
 
             # Perform a gradient step
             # TODO: update the learned parameters correctly
-            self.w = None
-            self.b = 0.0
+            self.w = self.w - (self.lr * g_w)
+            self.b = self.b - (self.lr * g_b)
 
             if keep_losses:
                 train_losses.append(self.loss(self.w, self.b,  X, y))
@@ -128,6 +130,6 @@ import numpy as np
         """
 
         # TODO: Compute
-        y_pred = None
+        y_pred = X.dot(self.w) + self.b
 
         return y_pred
