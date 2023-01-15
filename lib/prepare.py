@@ -15,7 +15,7 @@ def _get_norm_features_lists(df: pd.DataFrame) -> tuple:
     ['PCR_10'] + \
     df.filter(like='symptom').columns.tolist() + \
     df.filter(like='blood').columns.tolist()
-    z_score_features = df.columns.difference(min_max_features + ['risk', 'spread']).tolist()
+    z_score_features = df.columns.difference(min_max_features + ['contamination_level']).tolist()
     return (min_max_features, z_score_features)
 
 def _blood_type_divide(df: pd.DataFrame) -> None:
